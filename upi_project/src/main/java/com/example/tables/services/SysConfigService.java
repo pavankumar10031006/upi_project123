@@ -4,6 +4,7 @@ import com.example.tables.Entity.UpiSmsEntity;
 import com.example.tables.models.ColumnMetaData;
 import com.example.tables.models.FilterModel;
 import com.example.tables.models.ResponsePojo;
+import com.example.tables.models.TableMappingProperties;
 import com.example.tables.models.UpiSmsModel;
 import com.example.tables.repo.UpiSmsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,11 @@ public class SysConfigService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private final TableMappingProperties tableMappingProperties;
 
-    private String getTableNameByCode(String tableCode) {
-        switch (tableCode) {
-            case "SYS":
-                return "SYSCONFIG";
-            case "UPISMS":
-                return "UPI_SMS_TEMPLATES";
-            case "UPIHOST":
-                return "UPI_HOST_SERVER_CONFIG";  // ✅ Add this line
-            default:
-                throw new IllegalArgumentException("Unknown tableCode: " + tableCode);
-        }
+    @Autowired
+    public SysConfigService(TableMappingProperties tableMappingProperties) {
+        this.tableMappingProperties = tableMappingProperties;
     }
 
     public ResponsePojo getFilteredTableDataSYS(
@@ -40,7 +34,7 @@ public class SysConfigService {
             String sortColumn, String sortDirection,
             List<FilterModel> filters) {
 
-        String tableName = getTableNameByCode(tableCode);
+        String tableName = tableMappingProperties.getTableName(tableCode);
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM ").append(tableName).append(" WHERE 1=1");
 
         List<Map<String, Object>> previewList = jdbcTemplate.queryForList(
@@ -142,8 +136,7 @@ public class SysConfigService {
                 response.setMetaData(metaDataList);
                 response.setData(dataList);
                 return response;
-            }
-            else{
+            } else {
                 return new ResponsePojo();
             }
         }

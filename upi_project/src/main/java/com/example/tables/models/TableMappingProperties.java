@@ -1,26 +1,32 @@
 package com.example.tables.models;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
-@ConfigurationProperties(prefix = "table-mapping")
 public class TableMappingProperties {
 
-    private Map<String, String> map;
+    @Value("${table-mapping.EMP}")
+    private String emp;
 
-    public Map<String, String> getMappings() {
-        return map;
-    }
+    @Value("${table-mapping.UPIHOST}")
+    private String uPIHOST;
 
-    public void setMappings(Map<String, String> map) {
-        this.map = map;
-    }
+    @Value("${table-mapping.UPISMS}")
+    private String uPISMS;
 
-    public String getTableNameByCode(String code) {
+    @Value("${table-mapping.SYS}")
+    private String sys;
+
+    public String getTableName(String code) {
+        Map<String, String> map = new HashMap<>();
+        map.put("EMP", emp);
+        map.put("UPIHOST", uPIHOST);
+        map.put("UPISMS", uPISMS);
+        map.put("SYS", sys);
         return map.get(code);
     }
 }
-
