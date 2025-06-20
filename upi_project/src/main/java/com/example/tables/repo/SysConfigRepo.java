@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SysConfigRepo extends JpaRepository<SysConfig, String> {
-//       Page<SysConfig> findAll(Pageable pageable);
+
 
     @Query("SELECT s FROM SysConfig s")
     List<SysConfig> fetchAllConfigs();

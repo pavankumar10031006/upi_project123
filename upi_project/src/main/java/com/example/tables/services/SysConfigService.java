@@ -1,12 +1,13 @@
 package com.example.tables.services;
 
-import com.example.tables.Entity.UpiSmsEntity;
+import com.example.tables.Entity.SysConfig;
 import com.example.tables.models.ColumnMetaData;
 import com.example.tables.models.FilterModel;
 import com.example.tables.models.ResponsePojo;
+import com.example.tables.models.SysConfigModel;
 import com.example.tables.models.TableMappingProperties;
-import com.example.tables.models.UpiSmsModel;
-import com.example.tables.repo.UpiSmsRepo;
+import com.example.tables.repo.SysConfigRepo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,6 @@ import java.util.Map;
 public class SysConfigService {
 
     @Autowired
-    private UpiSmsRepo upiSmsRepo;
-
-    @Autowired
     private JdbcTemplate jdbcTemplate;
     private final TableMappingProperties tableMappingProperties;
 
@@ -28,6 +26,9 @@ public class SysConfigService {
     public SysConfigService(TableMappingProperties tableMappingProperties) {
         this.tableMappingProperties = tableMappingProperties;
     }
+
+    @Autowired
+    SysConfigRepo sysConfigRepo;
 
     public ResponsePojo getFilteredTableDataSYS(
             String tableCode, int limit, int offset,
@@ -141,4 +142,16 @@ public class SysConfigService {
             }
         }
     }
+
+    public void updateSysConfig(SysConfigModel payload) {
+        SysConfig existing = sysConfigRepo.findById(payload.getId())
+                .orElseThrow(() -> new RuntimeException("SysConfig not found"));
+
+        existing.setValue(payload.getValue());
+        existing.setReadPerm(payload.getReadPerm());
+        existing.setWritePerm(payload.getWritePerm());
+         existing.setDataType(payload.getDataType());
+        sysConfigRepo.save(existing);
+    }
+
 }
