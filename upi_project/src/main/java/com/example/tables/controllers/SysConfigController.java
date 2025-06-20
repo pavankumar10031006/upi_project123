@@ -1,5 +1,6 @@
 package com.example.tables.controllers;
 
+import com.example.tables.Entity.SysConfig;
 import com.example.tables.models.DataTablePayloadModel;
 import com.example.tables.models.FilterModel;
 import com.example.tables.models.ResponsePojo;
@@ -66,6 +67,34 @@ public class SysConfigController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/updateUpiHostTable")
+    public ResponseEntity<?> updateUpiHostTable(@RequestBody SysConfigModel payload) {
+        try {
+            sysConfigService.updateSysConfig(payload);
+            return ResponseEntity.ok("Table updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/config/{id}")
+    public ResponseEntity<?> deleteConfig(@PathVariable String id) {
+        logger.info("Delete request received for config ID: {}", id);
+
+        try {
+            boolean deleted = sysConfigService.deleteConfigById(id);
+            if (deleted) {
+                return ResponseEntity.ok("Record deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record not found");
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting record with ID: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
 }

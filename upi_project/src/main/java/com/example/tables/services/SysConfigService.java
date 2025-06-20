@@ -145,13 +145,22 @@ public class SysConfigService {
 
     public void updateSysConfig(SysConfigModel payload) {
         SysConfig existing = sysConfigRepo.findById(payload.getId())
-                .orElseThrow(() -> new RuntimeException("SysConfig not found"));
+                .orElseThrow(() -> new RuntimeException("ID not found please check ID"));
 
         existing.setValue(payload.getValue());
         existing.setReadPerm(payload.getReadPerm());
         existing.setWritePerm(payload.getWritePerm());
-         existing.setDataType(payload.getDataType());
+        existing.setDataType(payload.getDataType());
         sysConfigRepo.save(existing);
+    }
+
+    public boolean deleteConfigById(String id) {
+        if (sysConfigRepo.existsById(id)) {
+            sysConfigRepo.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
