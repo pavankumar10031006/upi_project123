@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.example.tables.Entity.UpiSmsEntity;
 
     @Repository
-public interface UpiSmsRepo extends JpaRepository<UpiSmsEntity, String> {
+public interface UpiSmsRepo extends JpaRepository<UpiSmsEntity, Long> {
     @Query("SELECT s FROM UpiSmsEntity s")
     List<UpiSmsEntity> fetchAllConfigs();
 

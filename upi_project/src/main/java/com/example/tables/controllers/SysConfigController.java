@@ -1,17 +1,15 @@
 package com.example.tables.controllers;
 
-import com.example.tables.Entity.SysConfig;
 import com.example.tables.models.DataTablePayloadModel;
 import com.example.tables.models.FilterModel;
 import com.example.tables.models.ResponsePojo;
 import com.example.tables.models.SysConfigModel;
+import com.example.tables.models.UpiHostModel;
+import com.example.tables.models.UpiSmsModel;
 import com.example.tables.services.SysConfigService;
-
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,9 +69,9 @@ public class SysConfigController {
     }
 
     @PutMapping("/updateUpiHostTable")
-    public ResponseEntity<?> updateUpiHostTable(@RequestBody SysConfigModel payload) {
+    public ResponseEntity<?> updateUpiHostTable(@RequestBody UpiHostModel payload) {
         try {
-            sysConfigService.updateSysConfig(payload);
+            sysConfigService.updateUpiHostTable(payload);
             return ResponseEntity.ok("Table updated successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -81,12 +79,56 @@ public class SysConfigController {
         }
     }
 
-    @DeleteMapping("/config/{id}")
+    @PutMapping("/updateUpiSmsTable")
+    public ResponseEntity<?> updateUpiSmsTable(@RequestBody UpiSmsModel payload) {
+        try {
+            sysConfigService.updateUpiSmsTable(payload);
+            return ResponseEntity.ok("Table updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/sysConfig/{id}")
     public ResponseEntity<?> deleteConfig(@PathVariable String id) {
         logger.info("Delete request received for config ID: {}", id);
 
         try {
             boolean deleted = sysConfigService.deleteConfigById(id);
+            if (deleted) {
+                return ResponseEntity.ok("Record deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record not found");
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting record with ID: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+
+    @DeleteMapping("/upiHost/{id}")
+    public ResponseEntity<?> deleteupiHost(@PathVariable Long id) {
+        logger.info("Delete request received for config ID: {}", id);
+
+        try {
+            boolean deleted = sysConfigService.deleteupiHostById(id);
+            if (deleted) {
+                return ResponseEntity.ok("Record deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record not found");
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting record with ID: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+    @DeleteMapping("/upiSms/{id}")
+    public ResponseEntity<?> deleteupiSms(@PathVariable Long id) {
+        logger.info("Delete request received for config ID: {}", id);
+
+        try {
+            boolean deleted = sysConfigService.deleteupiSmsById(id);
             if (deleted) {
                 return ResponseEntity.ok("Record deleted successfully");
             } else {
