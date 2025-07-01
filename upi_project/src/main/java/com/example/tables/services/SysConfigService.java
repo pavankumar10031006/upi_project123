@@ -16,7 +16,6 @@ import java.util.*;
 
 @Service
 public class SysConfigService {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

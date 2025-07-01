@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SysConfigRepo extends JpaRepository<SysConfig, String> {
-
-
     @Query("SELECT s FROM SysConfig s")
     List<SysConfig> fetchAllConfigs();
 

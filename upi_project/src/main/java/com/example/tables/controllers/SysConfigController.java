@@ -27,6 +27,7 @@ public class SysConfigController {
 
     @GetMapping()
     public String initialCallApi() {
+        logger.info("Received request at root endpoint.");
         return "Hello developer Welcome";
     }
 
@@ -59,10 +60,13 @@ public class SysConfigController {
 
     @PutMapping("/updateSysTable")
     public ResponseEntity<?> updateSysTable(@RequestBody SysConfigModel payload) {
+        logger.debug("Received PUT request to updateSysTable with payload: {}", payload);
         try {
             sysConfigService.updateSysConfig(payload);
+            logger.info("SysConfig updated successfully.");
             return ResponseEntity.ok("SysConfig updated successfully.");
         } catch (Exception e) {
+            logger.error("Error occurred while updating SysConfig", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Internal Server Error: " + e.getMessage());
         }
@@ -70,10 +74,13 @@ public class SysConfigController {
 
     @PutMapping("/updateUpiHostTable")
     public ResponseEntity<?> updateUpiHostTable(@RequestBody UpiHostModel payload) {
+        logger.info("Received PUT request to updateUpiHostTable with payload: {}", payload);
         try {
             sysConfigService.updateUpiHostTable(payload);
+            logger.info("UpiHostTable updated successfully.");
             return ResponseEntity.ok("Table updated successfully.");
         } catch (Exception e) {
+            logger.error("Error occurred while updating UpiHostTable", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Internal Server Error: " + e.getMessage());
         }
@@ -81,10 +88,13 @@ public class SysConfigController {
 
     @PutMapping("/updateUpiSmsTable")
     public ResponseEntity<?> updateUpiSmsTable(@RequestBody UpiSmsModel payload) {
+        logger.info("Received PUT request to updateUpiSmsTable with payload: {}", payload);
         try {
             sysConfigService.updateUpiSmsTable(payload);
+            logger.info("UpiSmsTable updated successfully.");
             return ResponseEntity.ok("Table updated successfully.");
         } catch (Exception e) {
+            logger.error("Error occurred while updating UpiSmsTable", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Internal Server Error: " + e.getMessage());
         }
@@ -97,8 +107,10 @@ public class SysConfigController {
         try {
             boolean deleted = sysConfigService.deleteConfigById(id);
             if (deleted) {
+                logger.info("Successfully deleted config with ID: {}", id);
                 return ResponseEntity.ok("Record deleted successfully");
             } else {
+                logger.warn("No record found with ID: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record not found");
             }
         } catch (Exception e) {
@@ -109,33 +121,52 @@ public class SysConfigController {
 
     @DeleteMapping("/upiHost/{id}")
     public ResponseEntity<?> deleteupiHost(@PathVariable Long id) {
-        logger.info("Delete request received for config ID: {}", id);
+        logger.info("Delete request received for upiHost ID: {}", id);
 
         try {
             boolean deleted = sysConfigService.deleteupiHostById(id);
             if (deleted) {
+                logger.info("Successfully deleted UpiHost with ID: {}", id);
                 return ResponseEntity.ok("Record deleted successfully");
             } else {
+                logger.warn("No UpiHost record found with ID: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record not found");
             }
         } catch (Exception e) {
-            logger.error("Error deleting record with ID: {}", id, e);
+            logger.error("Error deleting UpiHost with ID: {}", id, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
+
     @DeleteMapping("/upiSms/{id}")
     public ResponseEntity<?> deleteupiSms(@PathVariable Long id) {
-        logger.info("Delete request received for config ID: {}", id);
+        logger.info("Delete request received for upiSms ID: {}", id);
 
         try {
             boolean deleted = sysConfigService.deleteupiSmsById(id);
             if (deleted) {
+                logger.info("Successfully deleted UpiSms with ID: {}", id);
                 return ResponseEntity.ok("Record deleted successfully");
             } else {
+                logger.warn("No UpiSms record found with ID: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record not found");
             }
         } catch (Exception e) {
-            logger.error("Error deleting record with ID: {}", id, e);
+            logger.error("Error deleting UpiSms with ID: {}", id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/searchSysDataTable")
+    public ResponseEntity<?> searchSysDataTable(@PathVariable Long id) {
+        logger.info("SearchSysDataTable called with ID: {}", id);
+
+        try {
+            // Assuming this is a stubbed method for now
+            logger.warn("Stub method hit for /searchSysDataTable. Returning NOT_FOUND.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record not found");
+        } catch (Exception e) {
+            logger.error("Error occurred while searching in /searchSysDataTable", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
